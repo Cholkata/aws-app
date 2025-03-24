@@ -1,4 +1,9 @@
 terraform {
+  backend "s3" {
+    bucket = "terraform-awsapp-statefile-01"
+    key    = "key/terraform-statefile.tflock"
+    region = "eu-north-1"
+  }
   required_providers {
     aws = {
         source = "hashicorp/aws"
@@ -12,6 +17,7 @@ provider "aws" {
 }
 
 resource "aws_instance" "example" {
-  ami = "ami-09042b2f6d07d164a"
-  instance_type = "t2.micro"
+  ami = "ami-0c1ac8a41498c1a9c"
+  instance_type = "t3.micro"
+  
 }
