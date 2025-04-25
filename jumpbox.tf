@@ -44,10 +44,10 @@ resource "aws_instance" "jumpbox" {
 }
 
 resource "aws_eip" "jump" {
-  instance = aws_instance.jumpbox.id
-  vpc = true
+   instance = aws_instance.jumpbox.id
+   vpc = true
 
-  tags = {
-    Name = "Jumpbox EIP"
-  } 
-}
+   tags = {
+     Name = "Jumpbox EIP"
+   } 
+ }
