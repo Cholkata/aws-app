@@ -7,8 +7,7 @@
   }
 resource "aws_vpc" "backend" {
   cidr_block = "10.0.1.0/24"
-  #main_route_table_id = aws_route_table.defaultBackend.id
-  #depends_on = [ aws_main_route_table_association.backend ]
+  
   
   tags = {
     Name = "Backend VPC"
@@ -42,6 +41,11 @@ resource "aws_route_table" "defaultBackend" {
     Name = "Backend Route Table"
   }
 
+  route {
+    cidr_block = "10.0.2.0/24"
+    vpc_peering_connection_id = aws_vpc_peering_connection.BackendData.id
+  }
+
 }
 
 resource "aws_route" "route" {
@@ -59,34 +63,92 @@ resource "aws_route" "route" {
  }
 
  
-# resource "aws_vpc_peering_connection" "vpcPeering" {
-#   vpc_id        = aws_vpc.main.id
-#   peer_vpc_id   = aws_vpc.backend.id
-#   auto_accept   = true
+ resource "aws_vpc_peering_connection" "BackendData" {
+   vpc_id        = aws_vpc.data.id
+   peer_vpc_id   = aws_vpc.backend.id
+   auto_accept   = true
 
-#   tags = {
-#     Name = "VPC Peering Connection"
-#   }
-# }
+   tags = {
+     Name = "BackendData Peering"
+   }
+ }
 
-# resource "aws_route_table" "defaultMain" {
-#   vpc_id = aws_vpc.main.id
-#   route {
-#     cidr_block = "0.0.0.0/0"
-    
-#   }
-#   tags = {
-#     Name = "Backend Route Table"
-#   }
+ resource "aws_route_table" "Data" {
+   vpc_id = aws_vpc.data.id
+   route {
+     cidr_block = "10.0.1.0/24"
+    vpc_peering_connection_id = aws_vpc_peering_connection.BackendData.id
+   }
+   tags = {
+     Name = "Data Route Table"
+   }
 
-# }
+ }
 
-# resource "aws_route" "route2" {
-#   route_table_id = aws_route_table.defaultMain.id
-#   destination_cidr_block = "0.0.0.0/0"
-#   transit_gateway_id = aws_vpc.main.id
-#   depends_on = [aws_route_table.defaultMain]
-# }
+ resource "aws_main_route_table_association" "data" {
+   vpc_id     = aws_vpc.data.id
+   route_table_id = aws_route_table.Data.id
+   depends_on = [aws_route_table.Data]
+ }
+
+
+resource "aws_vpc_peering_connection" "MainBackend" {
+  vpc_id        = aws_vpc.main.id
+  peer_vpc_id   = aws_vpc.backend.id
+  auto_accept   = true
+
+  tags = {
+    Name = "MainBackend Peering"
+  }
+  
+}
+
+resource "aws_route_table" "Main" {
+   vpc_id = aws_vpc.main.id
+   route {
+     cidr_block = "10.0.1.0/24"
+    vpc_peering_connection_id = aws_vpc_peering_connection.MainBackend.id
+   }
+   tags = {
+     Name = "Main Route Table"
+   }
+
+ }
+
+ resource "aws_main_route_table_association" "main" {
+   vpc_id     = aws_vpc.main.id
+   route_table_id = aws_route_table.Main.id
+   depends_on = [aws_route_table.Main]
+ }
+
+resource "aws_vpc_peering_connection" "MainData" {
+  vpc_id        = aws_vpc.main.id
+  peer_vpc_id   = aws_vpc.data.id
+  auto_accept   = true
+
+  tags = {
+    Name = "MainData Peering"
+  }
+  
+}
+
+resource "aws_route_table" "route2" {
+   vpc_id = aws_vpc.data.id
+   route {
+     cidr_block = "10.0.0.0/24"
+    vpc_peering_connection_id = aws_vpc_peering_connection.MainData.id
+   }
+   tags = {
+     Name = "MainData Route Table"
+   }
+
+ }
+
+resource "aws_main_route_table_association" "data2" {
+    vpc_id     = aws_vpc.data.id
+    route_table_id = aws_route_table.route2.id
+    depends_on = [aws_route_table.route2]
+  }
 
 
 resource "aws_subnet" "main" {

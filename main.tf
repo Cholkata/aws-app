@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
-    bucket = "terraform-awsapp-statefile-01"
-    key    = "key/terraform-statefile.tflock"
+    bucket = "terraform-awsapp-statefile-02"
+    key    = "key/terraform.tfstate"
     region = "eu-north-1"
   }
 }
@@ -18,3 +18,4 @@ provider "aws" {
 #     Name = "Instance Example"
 #   }
 # }
+

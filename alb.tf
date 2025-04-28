@@ -1,4 +1,5 @@
-# resource "aws_alb_target_group" "target-group-a" {
+
+#resource "aws_alb_target_group" "target-group-a" {
   
 #   name     = "target-group-a"
 #   port     = 80
@@ -97,4 +98,3 @@
           
 #         }
 #     }
-# }

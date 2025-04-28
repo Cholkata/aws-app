@@ -50,4 +50,4 @@ resource "aws_eip" "jump" {
    tags = {
      Name = "Jumpbox EIP"
    } 
- }
+}
