@@ -3,6 +3,7 @@ terraform {
     bucket = "terraform-awsapp-statefile-02"
     key    = "key/terraform.tfstate"
     region = "eu-north-1"
+
   }
 }
 provider "aws" {
