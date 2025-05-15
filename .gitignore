@@ -9,3 +9,5 @@ crash.log
 
 # Ignore environment files
 .env
+
+.terraform.lock.hcl

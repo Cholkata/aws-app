@@ -25,23 +25,3 @@ resource "aws_lb_target_group" "alb-target-group" {
     Name = "project-target-group"
   }
 }
-
-resource "aws_lb_listener" "alb-listener" {
-  load_balancer_arn = aws_lb.alb.arn
-  port              = 80
-  protocol          = "tcp"
-
-  default_action {
-    type = "redirect"
-  
-  redirect {
-    port = "443"
-    protocol = "HTTPS"
-    status_code = "HTTP_301"
-
-  }
-}
-  tags = {
-    Name = "project-listener"
-  }
-}
