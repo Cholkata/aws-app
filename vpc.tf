@@ -6,27 +6,6 @@
     }
   }
 
-  resource "aws_security_group" "main-securityGroup" {
-  description = "HTTP/HTPPS access"
-  vpc_id = aws_vpc.main.id
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  
-  }
-   tags = {
-    Name = "Main Security Group"
-   }
-}
 resource "aws_vpc" "backend" {
   cidr_block = "10.0.1.0/24"
   
@@ -43,6 +22,62 @@ resource "aws_vpc"  "data" {
         Name = "Data VPC"
     }
 }
+resource "aws_subnet" "main" {
+  vpc_id     = aws_vpc.main.id
+  cidr_block = "10.0.0.0/25"
+  availability_zone = "eu-north-1a"
+
+  tags = {
+    Name = "Main"
+  }
+}
+
+resource "aws_subnet" "main2" {
+  vpc_id     = aws_vpc.main.id
+  cidr_block = "10.0.0.128/25"
+  availability_zone = "eu-north-1b"
+
+  tags = {
+    Name = "Main2"
+  }
+}
+
+resource "aws_subnet" "backend" {
+  vpc_id     = aws_vpc.backend.id
+  cidr_block = "10.0.1.0/24"
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = "Backend"
+  }
+}
+
+resource "aws_subnet" "data1" {
+  vpc_id     = aws_vpc.data.id
+  cidr_block = "10.0.2.0/25"
+  availability_zone = "eu-north-1a"
+  tags = {
+    Name = "Data1"
+  }
+}
+
+resource "aws_subnet" "data2" {
+  vpc_id     = aws_vpc.data.id
+  cidr_block = "10.0.2.128/25"
+  availability_zone = "eu-north-1b"
+  tags = {
+    Name = "Data2"
+  }
+}
+
+ resource "aws_db_subnet_group" "data_subnet_group" {
+   name = "data1"
+   subnet_ids = [aws_subnet.data1.id, aws_subnet.data2.id]
+
+   tags = {
+     Name = "Data Subnet Group"
+   }
+ }
 
 resource "aws_internet_gateway" "mainGateway" {
   vpc_id = aws_vpc.main.id
@@ -108,6 +143,27 @@ resource "aws_route" "backendRoute" {
    depends_on = [aws_route_table.defaultBackend]
  }
 
+  resource "aws_security_group" "main-securityGroup" {
+  description = "HTTP/HTPPS access"
+  vpc_id = aws_vpc.main.id
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  
+  }
+   tags = {
+    Name = "Main Security Group"
+   }
+}
  
 #  resource "aws_vpc_peering_connection" "BackendData" {
 #    vpc_id        = aws_vpc.data.id
@@ -197,59 +253,3 @@ resource "aws_route" "backendRoute" {
 #   }
 
 
-resource "aws_subnet" "main" {
-  vpc_id     = aws_vpc.main.id
-  cidr_block = "10.0.0.0/25"
-  availability_zone = "eu-north-1a"
-
-  tags = {
-    Name = "Main"
-  }
-}
-
-resource "aws_subnet" "main2" {
-  vpc_id     = aws_vpc.main.id
-  cidr_block = "10.0.0.128/25"
-  availability_zone = "eu-north-1b"
-
-  tags = {
-    Name = "Main2"
-  }
-}
-
-resource "aws_subnet" "backend" {
-  vpc_id     = aws_vpc.backend.id
-  cidr_block = "10.0.1.0/24"
-  map_public_ip_on_launch = true
-
-  tags = {
-    Name = "Backend"
-  }
-}
-
-resource "aws_subnet" "data1" {
-  vpc_id     = aws_vpc.data.id
-  cidr_block = "10.0.2.0/25"
-  availability_zone = "eu-north-1a"
-  tags = {
-    Name = "Data1"
-  }
-}
-
-resource "aws_subnet" "data2" {
-  vpc_id     = aws_vpc.data.id
-  cidr_block = "10.0.2.128/25"
-  availability_zone = "eu-north-1b"
-  tags = {
-    Name = "Data2"
-  }
-}
-
- resource "aws_db_subnet_group" "data_subnet_group" {
-   name = "data1"
-   subnet_ids = [aws_subnet.data1.id, aws_subnet.data2.id]
-
-   tags = {
-     Name = "Data Subnet Group"
-   }
- }
