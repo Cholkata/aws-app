@@ -51,3 +51,16 @@ resource "aws_eip" "jump" {
      Name = "Jumpbox EIP"
    } 
 }
+
+resource "aws_ecr_repository" "ECR" {
+  name = "jumpbox-repo"
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+  tags = {
+    Name = "Jumpbox ECR Repository"
+  }
+  
+}
