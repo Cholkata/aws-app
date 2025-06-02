@@ -1,7 +1,7 @@
   resource "aws_eks_cluster" "testCluster" { 
     name     = "test-cluster"
     role_arn = "arn:aws:iam::179359595824:role/AmazonEKSAutoClusterRole"
-    version = "1.32"
+    version = "1.33"
 
     vpc_config {
       subnet_ids = [aws_subnet.main.id, aws_subnet.main2.id]
