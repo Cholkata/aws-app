@@ -37,6 +37,21 @@ resource "aws_instance" "jumpbox" {
       volume_size = 20
     }
 
+    user_data = <<-EOF
+                #!/bin/bash
+                /usr/bin/apt-get update
+                /usr/bin/apt-get upgrade -y
+                /usr/bin/apt-get upgrade linux-aws
+                /usr/bin/apt-get install net-tools
+                /usr/bin/apt install unzip
+                /usr/bin/curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+                /usr/bin/unzip awscliv2.zip
+                sudo ./aws/install
+                /usr/bin/curl -LO https://dl.k8s.io/release/v1.33.0/bin/linux/amd64/kubectl
+                sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+                echo "Hello!"
+                EOF
+
 
     tags = {
         Name = "Jumpbox Instance"

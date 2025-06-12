@@ -117,6 +117,22 @@ resource "aws_internet_gateway" "backendGateway" {
   }
 }
 
+resource "aws_eip" "clusterEIP" {
+  vpc = true
+  tags = {
+    Name = "Cluster NAT EIP"
+  }
+}
+
+resource "aws_nat_gateway" "clusterNAT" {
+  allocation_id = aws_eip.clusterEIP.id
+  subnet_id     = aws_subnet.main.id
+  tags = {
+    Name = "Cluster NAT Gateway"
+  }
+}
+
+
 resource "aws_route_table" "defaultBackend" {
   vpc_id = aws_vpc.backend.id
   route {
