@@ -49,7 +49,8 @@ resource "aws_instance" "jumpbox" {
                 sudo ./aws/install
                 /usr/bin/curl -LO https://dl.k8s.io/release/v1.33.0/bin/linux/amd64/kubectl
                 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-                echo "Hello!"
+                curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$PLATFORM.tar.gz"
+                sudo mv /tmp/eksctl /usr/local/bin
                 EOF
 
 
@@ -60,7 +61,7 @@ resource "aws_instance" "jumpbox" {
 
 resource "aws_eip" "jump" {
    instance = aws_instance.jumpbox.id
-   vpc = true
+   #vpc = true
 
    tags = {
      Name = "Jumpbox EIP"

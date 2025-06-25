@@ -99,12 +99,12 @@ resource "aws_route_table" "defaultMain" {
       Name = "Main Route Table"
     }
 }
-resource "aws_route" "mainRoute" {
-  route_table_id = aws_route_table.defaultMain.id
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id = aws_internet_gateway.mainGateway.id
-  depends_on = [aws_internet_gateway.mainGateway]
-}
+# resource "aws_route" "mainRoute" {
+#    route_table_id = aws_route_table.defaultMain.id
+#    destination_cidr_block = "0.0.0.0/0"
+#    gateway_id = aws_internet_gateway.mainGateway.id
+#    depends_on = [aws_internet_gateway.mainGateway]
+# }
 resource "aws_main_route_table_association" "main" {
     vpc_id     = aws_vpc.main.id
     route_table_id = aws_route_table.defaultMain.id
@@ -118,7 +118,7 @@ resource "aws_internet_gateway" "backendGateway" {
 }
 
 resource "aws_eip" "clusterEIP" {
-  vpc = true
+  #vpc = true
   tags = {
     Name = "Cluster NAT EIP"
   }
@@ -147,13 +147,13 @@ resource "aws_route_table" "defaultBackend" {
 
 }
 
-resource "aws_route" "backendRoute" {
-  route_table_id = aws_route_table.defaultBackend.id
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id = aws_internet_gateway.backendGateway.id
-  depends_on = [aws_internet_gateway.backendGateway]
+#  resource "aws_route" "backendRoute" {
+#    route_table_id = aws_route_table.defaultBackend.id
+#    destination_cidr_block = "0.0.0.0/0"
+#    gateway_id = aws_internet_gateway.backendGateway.id
+#    depends_on = [aws_internet_gateway.backendGateway]
 
-}
+#  }
 
  resource "aws_main_route_table_association" "backend" {
    vpc_id     = aws_vpc.backend.id
