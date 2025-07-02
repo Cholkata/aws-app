@@ -52,8 +52,6 @@ resource "aws_instance" "jumpbox" {
                 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
                 chmod 700 get_helm.sh
                 ./get_helm.sh
-                /usr/local/bin/aws configure set aws_access_key_id AKIASTQVKHUYCEZLIKVF
-                /usr/local/bin/aws configure set aws_secret_access_key 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
                 /usr/local/bin/aws set default region eu-north-1
                 /usr/local/bin/aws set default output json
                 /usr/local/bin/aws eks update-kubeconfig --name test-cluster
