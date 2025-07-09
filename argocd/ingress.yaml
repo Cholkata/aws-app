@@ -1,0 +1,34 @@
+  apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    annotations:
+    # Pottentially to be added alb ARN
+      alb.ingress.kubernetes.io/backend-protocol: HTTPS
+      # Use this annotation (which must match a service name) to route traffic to HTTP2 backends.
+      alb.ingress.kubernetes.io/conditions.argogrpc: |
+        [{"field":"http-header","httpHeaderConfig":{"httpHeaderName": "Content-Type", "values":["application/grpc"]}}]
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+    name: argocd
+    namespace: argocd
+  spec:
+    rules:
+    - host: argocd.argoproj.io
+      http:
+        paths:
+        - path: /
+          backend:
+            service:
+              name: argogrpc # The grpc service must be placed before the argocd-server for the listening rules to be created in the correct order
+              port:
+                number: 443
+          pathType: Prefix
+        - path: /
+          backend:
+            service:
+              name: argocd-server
+              port:
+                number: 443
+          pathType: Prefix
+    tls:
+    - hosts:
+      - argocd.argoproj.io
