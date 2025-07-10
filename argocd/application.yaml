@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://argoproj.github.io/argo-helm
     targetRevision: HEAD
-    path: dev
+    path: yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: default
