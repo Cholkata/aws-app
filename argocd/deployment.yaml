@@ -3,17 +3,18 @@ kind: Deployment
 metadata:
   name: app-deployment
 spec:
+  replicas: 2
   selector:
     matchLabels:
       app: example-app
-      replicas: two
   template:
     metadata:
       labels:
         app: example-app
     spec:
-       containers:
-         - name: example-app
-           image: argoproj/argocd:v2.6.15
-           ports:
-           - containerPort: 8080
+      containers:
+      - name: example
+        image: nanajanashia/argocd-app:1.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
