@@ -11,3 +11,4 @@ crash.log
 .env
 
 .terraform.lock.hcl
+argocd/argocd.exe
