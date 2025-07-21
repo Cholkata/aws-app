@@ -32,6 +32,7 @@ resource "aws_instance" "jumpbox" {
     subnet_id = aws_subnet.backend.id
     vpc_security_group_ids = [aws_security_group.jump.id]
     associate_public_ip_address = true
+    monitoring = true
     
     root_block_device {
       volume_size = 20

@@ -44,3 +44,8 @@ spec:
       prune: true
 EOF
 echo "Monitoring stack deployed successfully."
+kubectl apply -f ingress.yaml
+kubectl apply -f service.yaml
+kubectl apply -f deployment.yaml
+kubectl apply -f application.yaml
+echo "Yaml files applied successfully."
